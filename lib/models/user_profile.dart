@@ -24,7 +24,7 @@ class UserProfile {
     return UserProfile(
       id: map['id'],
       username: map['username'],
-      avatarUrl: map['avatarUrl'],
+      avatarUrl: map['avatar_url'], 
       birthdate: DateTime.parse(map['birthdate']),
     );
   }
@@ -33,7 +33,7 @@ class UserProfile {
     return {
       'id': id,
       'username': username,
-      'avatarUrl': avatarUrl,
+      'avatar_url': avatarUrl,
       'birthdate': birthdate.toIso8601String(),
     };
   }

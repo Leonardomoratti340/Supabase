@@ -20,7 +20,7 @@ class ProfileService {
   }
 
   Future<void> createUserProfile(UserProfile profile) async {
-    await _client.from('profiles').insert(profile.toMap());
+    await _client.from('profiles').upsert(profile.toMap());
   }
 
   Future<void> updateUserProfile(UserProfile profile) async {
