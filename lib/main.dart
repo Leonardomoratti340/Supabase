@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_supabase/viewmodel/auth_view_model.dart';
+import 'package:flutter_supabase/views/auth/login_view.dart';
+import 'package:flutter_supabase/views/home_view.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+// Creiamo un'istanza globale (opzionale, ma comodissima) per accedere al database da qualsiasi file
 final supabase = Supabase.instance.client;
 
 Future<void> main() async {
@@ -19,12 +24,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Supabase App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    return ChangeNotifierProvider(
+      create: (_) => AuthViewModel(),
+      child: Consumer<AuthViewModel>(
+        builder: (context, auth, child) {
+          return MaterialApp(
+          title: 'Supabase App',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        ),
+        home: auth.session != null ? const HomeView() : const LoginView()
+      );
+      },
+      
+      
       ),
-      home: const MyHomePage(title: 'Supabase Test'),
     );
   }
 }
