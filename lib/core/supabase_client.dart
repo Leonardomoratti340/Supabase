@@ -6,8 +6,8 @@ class SupabaseClientManager {
   Future<void> init() async {
     await dotenv.load();
     await Supabase.initialize(
-      url: dotenv.env["SUPABASE_URL"]!,
-      anonKey:dotenv.env["SUPABASE_ANON_KEY"]!,
+      url: dotenv.env["https://rcmtaxkojastwhqejung.supabase.co"]!,
+      anonKey:dotenv.env["sb_publishable_amk03t4RORVrTaOCz9l6Dg_NGFouXMq"]!,
     );
   }
 

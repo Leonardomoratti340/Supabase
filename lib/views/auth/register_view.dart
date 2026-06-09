@@ -28,7 +28,7 @@ class RegisterView extends StatelessWidget {
             obscureText: true,
           ),
           ElevatedButton(onPressed: ()async{
-            await vm.register(emailController.text, passwordController.text);
+            await vm.register(emailController.text.trim(), passwordController.text);
             if(vm.session != null && context.mounted) {
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=> HomeView()));
             }
