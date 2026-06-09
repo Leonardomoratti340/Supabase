@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_supabase/viewmodel/auth_view_model.dart';
 import 'package:flutter_supabase/views/auth/login_view.dart';
+import 'package:flutter_supabase/views/widgets/bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
 
 class HomeView extends StatelessWidget {
@@ -23,8 +24,8 @@ class HomeView extends StatelessWidget {
         ],
       ),
       body: const Center(
-        child: Text("Benvenuto nella Home!"),
-      ),
-    );
+        child: Text("Benvenuto nella Home!"),),
+        bottomNavigationBar: BottomNavBar(currentIndex: 0),
+        );
   }
 }

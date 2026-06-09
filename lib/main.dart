@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_supabase/viewmodel/auth_view_model.dart';
+import 'package:flutter_supabase/viewmodel/profile_view_model.dart';
 import 'package:flutter_supabase/views/auth/login_view.dart';
 import 'package:flutter_supabase/views/home_view.dart';
 import 'package:provider/provider.dart';
@@ -24,8 +25,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AuthViewModel(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(
+          create: (_) => ProfileViewModel()..loadUserProfile(),
+          lazy: false,
+          ),
+      ],
       child: Consumer<AuthViewModel>(
         builder: (context, auth, child) {
           return MaterialApp(
