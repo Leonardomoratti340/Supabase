@@ -128,30 +128,43 @@ class _UserProfileViewState extends State<UserProfileView> {
                         if (_formKey.currentState!.validate() &&
                             _selectedDate != null) {
                           final username = _usernameController.text.trim();
+                          
                           if (profile == null) {
-                            //*CREA nuovo profilo se non esiste
+                            //* CREA nuovo profilo se non esiste
                             await profileVM.createUserProfile(
                               username,
                               _selectedDate!,
+                              avatarFile: _selectedFile, // <--- File aggiunto qui
                             );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Profilo creato con successo"),
-                              ),
-                            );
+                            
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Profilo creato con successo"),
+                                ),
+                              );
+                            }
                           } else {
+                            //* AGGIORNA profilo esistente
                             final updated = UserProfile(
                               id: profile.id,
                               username: username,
                               birthdate: _selectedDate!,
                               avatarUrl: profile.avatarUrl,
-                            ); // // UserProfile
-                            await profileVM.updateUserProfile(updated);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Profilo aggiornato"),
-                              ), // // SnackBar
+                            ); 
+                            
+                            await profileVM.updateUserProfile(
+                              updated,
+                              avatarFile: _selectedFile, // <--- File aggiunto qui
                             );
+                            
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Profilo aggiornato"),
+                                ), 
+                              );
+                            }
                           }
                         }
                       },
