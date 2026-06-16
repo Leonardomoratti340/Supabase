@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_supabase/models/user_profile.dart';
 import 'package:flutter_supabase/viewmodel/profile_view_model.dart';
 import 'package:flutter_supabase/views/widgets/bottom_nav_bar.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +19,7 @@ class _UserProfileViewState extends State<UserProfileView> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   DateTime? _selectedDate;
+  File? _selectedFile;
 
   @override
   void dispose() {
@@ -37,6 +41,20 @@ class _UserProfileViewState extends State<UserProfileView> {
     });
   }
 
+  Future<void> _pickImageFromGallery() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 80,
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _selectedFile = File(pickedFile.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final profileVM = Provider.of<ProfileViewModel>(context);
@@ -53,12 +71,12 @@ class _UserProfileViewState extends State<UserProfileView> {
                   children: [
                     Center(
                       child: GestureDetector(
-                        onTap: () {
-                          // Metodo per modificare l'immagine
-                        },
+                        onTap: _pickImageFromGallery,
                         child: CircleAvatar(
                           radius: 50,
-                          backgroundImage: profile?.avatarUrl != null
+                          backgroundImage: _selectedFile != null
+                              ? FileImage(_selectedFile!)
+                              : profile?.avatarUrl != null
                               ? NetworkImage(profile!.avatarUrl!)
                               : AssetImage('assets/avatar_placeholder.png')
                                     as ImageProvider,
