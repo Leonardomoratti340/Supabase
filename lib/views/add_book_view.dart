@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_supabase/models/book_model.dart' show BookStatus;
+import 'package:flutter_supabase/models/book_model.dart' show BookStatus, Book;
+import 'package:flutter_supabase/viewmodel/book_view_model.dart';
+import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 String _statusLabel(BookStatus status) {
   switch (status) {
@@ -43,12 +47,46 @@ class _AddBookViewState extends State<AddBookView> {
     super.dispose();
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      // logica del salvataggio la inseriamo tra poco
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Dati validi possiamo andare avanti")),
+  Future<void> _submitForm() async {
+    if (_formKey.currentState!.validate() && _selectedStatus != null) {
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId == null) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('utente non autenticato')));
+        return;
+      }
+
+      final newBook = Book(
+        id: const Uuid().v4(),
+        userId: userId,
+        title: _titleController.text.trim(),
+        genre: _genreController.text.trim(),
+        author: _authorController.text.trim(),
+        pages: int.tryParse(_pagesController.text.trim()) ?? 0,
+        rating: _rating.toInt(),
+        comment: _commentController.text.trim(),
+        status: _selectedStatus!,
+        createdAt: DateTime.now(),
       );
+
+      try {
+        await Provider.of<BookViewModel>(
+          context,
+          listen: false,
+        ).addBook(newBook);
+        if (context.mounted) {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Dati validi possiamo andare avanti")),
+          );
+        }
+      } catch (e) {
+        print("errore nel salvataggio del libor: $e");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Errore nel salvataggio del libro")),
+        );
+      }
     }
   }
 
