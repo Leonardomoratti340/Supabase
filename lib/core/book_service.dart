@@ -1,3 +1,4 @@
+import 'package:flutter_supabase/models/book_image.dart';
 import 'package:flutter_supabase/models/book_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -30,5 +31,20 @@ class BookService {
 
   Future<void> deleteBook(String bookId) async {
     await _client.from('books').delete().eq('id', bookId);
+  }
+
+  Future<List<Book>> fecthBooks() async {
+    final response = await _client
+        .from('books')
+        .select('*, book_images (id, book_id, image_url)')
+        .order('created_at', ascending: false);
+
+    final data = response as List;
+    return data.map((map) {
+      final images = (map['book_images'] as List<dynamic>?)
+          ?.map((img) => BookImage.fromMap(img))
+          .toList();
+      return Book.fromMap(map, images: images);
+    }).toList();
   }
 }
