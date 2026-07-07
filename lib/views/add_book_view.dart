@@ -23,6 +23,8 @@ String _statusLabel(BookStatus status) {
       return "Lasciato";
     case BookStatus.nonInteressa:
       return "Non interessa";
+    default:
+      return "Stato sconosciuto"; 
   }
 }
 

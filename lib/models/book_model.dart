@@ -5,7 +5,7 @@ enum BookStatus {
   inLettura,
   daLeggere,
   lasciato,
-  nonInteressa;
+  nonInteressa, reading;
 
   String toDbValue() {
     switch (this) {
@@ -19,6 +19,8 @@ enum BookStatus {
         return 'lasciato';
       case BookStatus.nonInteressa:
         return 'non_interesse';
+      case BookStatus.reading:
+        throw UnimplementedError();
     }
   }
 

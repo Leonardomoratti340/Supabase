@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:flutter_supabase/viewmodel/auth_view_model.dart';
 import 'package:flutter_supabase/views/add_book_view.dart';
 import 'package:flutter_supabase/views/auth/login_view.dart';
 import 'package:flutter_supabase/views/widgets/bottom_nav_bar.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_supabase/views/book_list_view.dart'; 
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -11,6 +13,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = Provider.of<AuthViewModel>(context);
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home"),
@@ -24,18 +27,37 @@ class HomeView extends StatelessWidget {
                   MaterialPageRoute(builder: (_) => const LoginView()),
                 );
               }
-              // Qui potresti aggiungere la logica per il logout
             },
             icon: const Icon(Icons.logout),
           ),
         ],
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => AddBookView()));
-          },
-          child: const Text("Aggiungi un libro"),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => const AddBookView())
+                );
+              },
+              child: const Text("Aggiungi un libro"),
+            ),
+            
+            const SizedBox(height: 20),
+            
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => const BookListView()) 
+                );
+              },
+              child: const Text("Esplora tutti i libri"),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: BottomNavBar(currentIndex: 0),
